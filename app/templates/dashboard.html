@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="dashboard-grid">
+  <article class="card intro reveal-in">
+    <h1>Study Analyzer</h1>
+    <p>Log sessions, inspect trends, and generate AI-powered revision assets.</p>
+  </article>
+
+  <article class="card stats reveal-in delay-1">
+    <h2>Overview</h2>
+    <div class="stat-list">
+      <p>Total sessions: <strong id="totalSessions">0</strong></p>
+      <p>Total minutes: <strong id="totalMinutes">0</strong></p>
+      <p>Current streak: <strong id="streakDays">0</strong></p>
+      <p>Due revisions: <strong id="dueRevisions">0</strong></p>
+    </div>
+  </article>
+
+  <article class="card reveal-in delay-2">
+    <h2>Add Study Session</h2>
+    <form id="studyForm" class="stack">
+      <label>Subject<input type="text" name="subject" required /></label>
+      <label>Topic<input type="text" name="topic" required /></label>
+      <label>Duration (minutes)<input type="number" name="duration_minutes" min="1" max="720" required /></label>
+      <label>Date<input type="date" name="session_date" required /></label>
+      <label>Notes<textarea name="notes" rows="3"></textarea></label>
+      <button class="button" type="submit">Save Session</button>
+    </form>
+    <div id="studyMessage" class="message"></div>
+  </article>
+
+  <article class="card chart-card reveal-in delay-3">
+    <h2>Daily Focus</h2>
+    <canvas id="dailyChart"></canvas>
+  </article>
+
+  <article class="card chart-card reveal-in delay-4">
+    <h2>Weekly Momentum</h2>
+    <canvas id="weeklyChart"></canvas>
+  </article>
+
+  <article class="card chart-card reveal-in delay-5">
+    <h2>Monthly Depth</h2>
+    <canvas id="monthlyChart"></canvas>
+  </article>
+
+  <article class="card reveal-in delay-6">
+    <h2>Recent Sessions</h2>
+    <div id="sessionList" class="list"></div>
+  </article>
+
+  <article class="card reveal-in delay-7">
+    <h2>AI Questions</h2>
+    <form id="questionForm" class="stack">
+      <label>Topic<input type="text" name="topic" required /></label>
+      <label>Difficulty
+        <select name="difficulty">
+          <option>beginner</option>
+          <option selected>intermediate</option>
+          <option>advanced</option>
+        </select>
+      </label>
+      <label>Count<input type="number" name="count" min="1" max="10" value="5" /></label>
+      <button class="button" type="submit">Generate MCQs</button>
+    </form>
+    <pre id="aiOutput" class="ai-output"></pre>
+  </article>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/static/js/dashboard.js"></script>
+{% endblock %}

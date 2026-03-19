@@ -1,42 +1,95 @@
-# BrainBoost - Smart Study Analyser
+# BrainBoost
 
-A Streamlit app to track student study efficiency and productivity with visualizations and AI-powered revision/practice tools.
+BrainBoost is an open-source FastAPI application for student study tracking,
+analytics, revision planning, and AI-assisted practice generation.
 
 ## Features
 
-- User login with name, branch, course
-- Log study sessions with date, hours, and topic
-- Dashboard with visualizations:
-  - Monthly study hours trend
-  - Topic distribution
-  - Metrics: total hours, current streak, consistency percentage
-- AI-powered revision and practice question generation using Ollama (local LLM)
+- Student registration and login with token-based auth
+- Study session tracking with subject/topic granularity
+- Daily, weekly, and monthly analytics endpoints
+- Revision item planning and confidence-based review workflow
+- Hugging Face-powered MCQ and explanation generation
 
-## Setup
+## Tech Stack
 
-1. Install dependencies: `pip install -r requirements.txt`
+- FastAPI + Starlette
+- SQLAlchemy ORM + SQLite (default)
+- Pydantic v2 schemas
+- Jinja2 + vanilla JS frontend
+- Chart.js visualizations
 
-2. **Install Ollama (Free and Open-Source AI):**
-   - Download and install Ollama from [https://ollama.com/](https://ollama.com/)
-   - Open a terminal and run: `ollama pull llama3.2` (this downloads the Llama 3.2 model locally)
-   - Alternatively, you can use other models like `ollama pull mistral` or `ollama pull llama2`
+## Quick Start
 
-3. **Configure the App:**
-   - Run the app: `streamlit run app.py`
-   - Go to Settings in the app and set API Key to `ollama` (or any dummy value, as it's not used for local setup)
+1. Create a virtual environment and activate it.
+2. Install runtime dependencies.
 
-4. Ensure Ollama is running in the background when using AI features.
+```bash
+pip install -r requirements.txt
+```
 
-## Usage
+3. Create environment configuration.
 
-- Login with your details
-- Log your study sessions
-- View your progress on the dashboard
-- Use Revision/Practice sections for AI-generated questions
+```bash
+cp .env.example .env
+```
 
-## Troubleshooting
+4. Start the app.
 
-- Ensure Python 3.7+ is installed
-- For AI features, Ollama must be installed and running with a pulled model
-- Data is stored locally in SQLite database
-- If AI doesn't work, check that Ollama is running: `ollama serve`
+```bash
+uvicorn app.main:app --reload --port 3000
+```
+
+5. Open the app and docs.
+
+- UI: http://127.0.0.1:3000/login
+- API docs: http://127.0.0.1:3000/docs
+
+## Development
+
+Install developer tooling:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+Run checks:
+
+```bash
+ruff check .
+ruff format .
+pytest
+```
+
+## Project Layout
+
+```
+app/
+  core/         # config and security
+  db/           # engine/session setup
+  models/       # SQLAlchemy entities
+  routers/      # API and page routers
+  schemas/      # request/response models
+  services/     # analytics and AI integration
+  static/       # css/js assets
+  templates/    # server-side rendered pages
+  main.py       # FastAPI entrypoint
+tests/          # automated tests
+.github/        # issue templates + CI workflow
+```
+
+## Contributing
+
+Contributions are welcome. Please read:
+
+- CONTRIBUTING.md
+- CODE_OF_CONDUCT.md
+- SECURITY.md
+
+## Security and Responsible Disclosure
+
+Please report vulnerabilities privately using the process in SECURITY.md.
+
+## License
+
+This project is licensed under the MIT License. See LICENSE for details.
