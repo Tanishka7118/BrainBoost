@@ -1,3 +1,7 @@
+import os
+
+os.environ.setdefault("DATABASE_URL", "sqlite:///./brainboost-test-suite.db")
+
 from fastapi.testclient import TestClient
 
 from app.main import app

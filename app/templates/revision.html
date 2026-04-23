@@ -1,36 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="dashboard-grid">
-  <article class="card reveal-in">
-    <h1>Revision Planner</h1>
-    <p>Move from studying to long-term retention.</p>
-    <form id="revisionForm" class="stack">
-      <label>Topic<input type="text" name="topic" required /></label>
-      <label>Confidence (1-5)<input type="number" name="confidence_level" min="1" max="5" value="3" /></label>
-      <label>Next Review Date<input type="date" name="next_review_date" required /></label>
-      <label>Notes<textarea name="notes" rows="3"></textarea></label>
-      <button class="button" type="submit">Create Revision Item</button>
-    </form>
-    <div id="revisionMessage" class="message"></div>
+<section class="page-shell full-screen-shell revision-page">
+  <article class="hero-card card reveal-in">
+    <div>
+      <h1>Revision Planner</h1>
+      <p>Move from studying to long-term retention.</p>
+    </div>
   </article>
 
-  <article class="card reveal-in delay-2">
-    <h2>Due Revision Items</h2>
-    <div id="dueList" class="list"></div>
-  </article>
+  <section class="panel-grid revision-grid reveal-in delay-2">
+    <article class="card panel-card">
+      <h2>Create Revision Item</h2>
+      <form id="revisionForm" class="stack" method="post" action="/revisions/" onsubmit="return false;">
+        <label>Topic<input type="text" name="topic" required /></label>
+        <label>Confidence (1-5)<input type="number" name="confidence_level" min="1" max="5" value="3" /></label>
+        <label>Notes<textarea name="notes" rows="3"></textarea></label>
+        <button class="button" type="submit">Create Revision Item</button>
+      </form>
+      <div id="revisionMessage" class="message"></div>
+    </article>
 
-  <article class="card reveal-in delay-3">
-    <h2>Ask AI For Explanation</h2>
-    <form id="explainForm" class="stack">
-      <label>Question<textarea name="question" rows="3" required></textarea></label>
-      <label>Your answer / confusion<textarea name="answer" rows="3" required></textarea></label>
-      <button class="button" type="submit">Explain</button>
-    </form>
-    <pre id="explainOutput" class="ai-output"></pre>
-  </article>
+    <article class="card panel-card">
+      <h2>Revision Items</h2>
+      <div id="dueList" class="list scroll-panel"></div>
+    </article>
+
+    <article class="card panel-card revision-explain-card">
+      <h2>Ask AI For Explanation</h2>
+      <form id="explainForm" class="stack" method="post" action="/explain" onsubmit="return false;">
+        <label>Question<textarea name="question" rows="3" required></textarea></label>
+        <label>Your answer / confusion<textarea name="answer" rows="3" required></textarea></label>
+        <button class="button" type="submit">Explain</button>
+      </form>
+      <pre id="explainOutput" class="ai-output"></pre>
+    </article>
+  </section>
 </section>
 {% endblock %}
 
 {% block scripts %}
-<script src="/static/js/revision.js"></script>
+<script src="/static/js/revision.js?v=1.0.0"></script>
 {% endblock %}

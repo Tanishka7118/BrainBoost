@@ -24,9 +24,13 @@ pip install -r requirements-dev.txt
 ```env
 SECRET_KEY=replace-me
 ACCESS_TOKEN_EXPIRE_MINUTES=60
+DATABASE_URL=postgresql+psycopg://postgres:<password>@localhost:5432/brainboost
 HF_API_TOKEN=
 HF_MODEL=HuggingFaceH4/zephyr-7b-beta
 ```
+
+If your Postgres user can create databases, BrainBoost auto-creates `brainboost` on startup.
+Otherwise create it manually before running the app.
 
 6. Start the app:
 
@@ -34,11 +38,35 @@ HF_MODEL=HuggingFaceH4/zephyr-7b-beta
 uvicorn app.main:app --reload --port 3000
 ```
 
+7. (Optional) Seed local demo data:
+
+```bash
+python scripts/seed_demo_data.py
+```
+
+Demo credentials for local validation:
+
+- Email: `tanishka@example.com`
+- Password: `Pass@123`
+
+### Notes for First-Time Contributors
+
+- Check existing open issues before starting work.
+- Ask clarifying questions early in issue comments when requirements are ambiguous.
+- Prefer small, focused PRs over one large multi-topic PR.
+
 ## Branching and Commits
 
 - Create feature branches from `main`.
 - Keep PRs focused and reasonably small.
 - Use clear commit messages in imperative mood.
+
+Recommended branch names:
+
+- `feat/<short-topic>`
+- `fix/<short-topic>`
+- `docs/<short-topic>`
+- `test/<short-topic>`
 
 Suggested format:
 
@@ -55,6 +83,16 @@ Before opening a PR, verify:
 - Code formatting is clean: `ruff format .`
 - New behavior includes tests where applicable
 - API or user-facing changes are documented in `README.md`
+- Contributor-facing behavior changes are documented in `CONTRIBUTING.md` when relevant
+- Changelog updated under `Unreleased` for notable changes
+- PR description includes repro steps (bug fix) or acceptance checks (feature)
+
+## What Maintainers Look For
+
+- Clear problem statement in PR description
+- Minimal, focused diff with no unrelated formatting churn
+- Backward compatibility for existing endpoints unless explicitly discussed
+- Reasonable tests for bug fixes and behavior changes
 
 ## Coding Standards
 
@@ -62,6 +100,18 @@ Before opening a PR, verify:
 - Keep functions focused and avoid large monolith handlers.
 - Add comments only when logic is non-obvious.
 - Do not commit secrets, API tokens, or local databases.
+
+Frontend/UI contributions:
+
+- Keep responsive behavior intact (desktop + mobile)
+- Preserve existing visual style unless the PR is explicitly a redesign
+- Validate key flows on `/dashboard` and `/revision`
+
+Backend/API contributions:
+
+- Preserve existing route compatibility unless discussed with maintainers
+- Avoid introducing breaking schema assumptions for contributor/dev environments
+- Add or update tests in `tests/` for behavior changes
 
 ## Reporting Issues
 

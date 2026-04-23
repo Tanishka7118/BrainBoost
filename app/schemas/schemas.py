@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
 class Token(BaseModel):
@@ -8,16 +8,16 @@ class Token(BaseModel):
     token_type: str = "bearer"
 
 
-class StudentBase(BaseModel):
+class UserBase(BaseModel):
     name: str = Field(min_length=2, max_length=120)
     email: EmailStr
 
 
-class StudentCreate(StudentBase):
+class UserCreate(UserBase):
     password: str = Field(min_length=6, max_length=120)
 
 
-class StudentOut(StudentBase):
+class UserOut(UserBase):
     id: int
     created_at: datetime
 
@@ -48,12 +48,11 @@ class RevisionItemCreate(BaseModel):
     source_session_id: int | None = None
     notes: str | None = None
     confidence_level: int = Field(default=3, ge=1, le=5)
-    next_review_date: date
+    next_review_date: date | None = None
 
 
 class RevisionReviewRequest(BaseModel):
     confidence_level: int = Field(ge=1, le=5)
-    interval_days: int = Field(default=2, ge=1, le=60)
     notes: str | None = None
 
 
@@ -88,6 +87,14 @@ class QuestionRequest(BaseModel):
     difficulty: str = Field(default="intermediate")
     count: int = Field(default=5, ge=1, le=10)
 
+    @field_validator("difficulty")
+    @classmethod
+    def validate_difficulty(cls, value: str) -> str:
+        normalized = value.lower().strip()
+        if normalized not in {"beginner", "intermediate", "advanced"}:
+            raise ValueError("difficulty must be beginner, intermediate, or advanced")
+        return normalized
+
 
 class ExplainRequest(BaseModel):
     question: str = Field(min_length=4)
@@ -102,3 +109,14 @@ class AssessmentRequest(BaseModel):
 class AIResponse(BaseModel):
     content: str
     model: str
+
+
+class GeneratedQuestionOut(BaseModel):
+    question: str
+    options: list[str] = Field(min_length=4, max_length=4)
+    answer: str
+    explanation: str
+
+
+StudentCreate = UserCreate
+StudentOut = UserOut

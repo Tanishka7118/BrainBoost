@@ -3,10 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
-from app.db.database import Base, engine
+from app.db.database import init_db
 from app.routers import ai, auth, pages, revision, study
 
-Base.metadata.create_all(bind=engine)
+init_db()
 
 app = FastAPI(title=settings.app_name, version=settings.app_version)
 

@@ -1,74 +1,101 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="dashboard-grid">
-  <article class="card intro reveal-in">
-    <h1>Study Analyzer</h1>
-    <p>Log sessions, inspect trends, and generate AI-powered revision assets.</p>
-  </article>
-
-  <article class="card stats reveal-in delay-1">
-    <h2>Overview</h2>
-    <div class="stat-list">
-      <p>Total sessions: <strong id="totalSessions">0</strong></p>
-      <p>Total minutes: <strong id="totalMinutes">0</strong></p>
-      <p>Current streak: <strong id="streakDays">0</strong></p>
-      <p>Due revisions: <strong id="dueRevisions">0</strong></p>
+<section class="page-shell full-screen-shell dashboard-page">
+  <article class="hero-card card reveal-in">
+    <div>
+      <h1>Study Analyzer</h1>
+      <p>Log sessions, inspect trends, and generate AI-powered practice assets.</p>
+    </div>
+    <div class="stat-strip stats reveal-in delay-1">
+      <div>
+        <span>Total sessions</span>
+        <strong id="totalSessions">0</strong>
+      </div>
+      <div>
+        <span>Total minutes</span>
+        <strong id="totalMinutes">0</strong>
+      </div>
+      <div>
+        <span>Current streak</span>
+        <strong id="streakDays">0</strong>
+      </div>
+      <div>
+        <span>Due revisions</span>
+        <strong id="dueRevisions">0</strong>
+      </div>
     </div>
   </article>
 
-  <article class="card reveal-in delay-2">
-    <h2>Add Study Session</h2>
-    <form id="studyForm" class="stack">
-      <label>Subject<input type="text" name="subject" required /></label>
-      <label>Topic<input type="text" name="topic" required /></label>
-      <label>Duration (minutes)<input type="number" name="duration_minutes" min="1" max="720" required /></label>
-      <label>Date<input type="date" name="session_date" required /></label>
-      <label>Notes<textarea name="notes" rows="3"></textarea></label>
-      <button class="button" type="submit">Save Session</button>
-    </form>
-    <div id="studyMessage" class="message"></div>
-  </article>
+  <section class="panel-grid two-up dashboard-sections reveal-in delay-2">
+    <article class="card panel-card">
+      <h2>Add Study Session</h2>
+      <form id="studyForm" class="stack" method="post" action="/sessions/" onsubmit="return false;">
+        <label>Subject<input type="text" name="subject" required /></label>
+        <label>Topic<input type="text" name="topic" required /></label>
+        <label>Duration (minutes)<input type="number" name="duration_minutes" min="1" max="720" required /></label>
+        <label>Date<input type="date" name="session_date" required /></label>
+        <label>Notes<textarea name="notes" rows="3"></textarea></label>
+        <button class="button" type="submit">Save Session</button>
+      </form>
+      <div id="studyMessage" class="message"></div>
+    </article>
 
-  <article class="card chart-card reveal-in delay-3">
-    <h2>Daily Focus</h2>
-    <canvas id="dailyChart"></canvas>
-  </article>
+    <article class="card panel-card">
+      <h2>Recent Sessions</h2>
+      <div id="sessionList" class="list scroll-panel"></div>
+    </article>
+  </section>
 
-  <article class="card chart-card reveal-in delay-4">
-    <h2>Weekly Momentum</h2>
-    <canvas id="weeklyChart"></canvas>
-  </article>
+  <section class="card analytics-section reveal-in delay-3">
+    <div class="analytics-heading">
+      <h2>Analytics</h2>
+      <p>Full-width charts for daily, weekly, and monthly study trends.</p>
+    </div>
+    <div class="panel-grid analytics-grid wide-analytics">
+      <article class="card chart-card tall-chart">
+        <h2>Daily Focus</h2>
+        <canvas id="dailyChart"></canvas>
+      </article>
 
-  <article class="card chart-card reveal-in delay-5">
-    <h2>Monthly Depth</h2>
-    <canvas id="monthlyChart"></canvas>
-  </article>
+      <article class="card chart-card tall-chart">
+        <h2>Weekly Momentum</h2>
+        <canvas id="weeklyChart"></canvas>
+      </article>
 
-  <article class="card reveal-in delay-6">
-    <h2>Recent Sessions</h2>
-    <div id="sessionList" class="list"></div>
-  </article>
+      <article class="card chart-card tall-chart">
+        <h2>Monthly Depth</h2>
+        <canvas id="monthlyChart"></canvas>
+      </article>
+    </div>
+  </section>
 
-  <article class="card reveal-in delay-7">
-    <h2>AI Questions</h2>
-    <form id="questionForm" class="stack">
-      <label>Topic<input type="text" name="topic" required /></label>
-      <label>Difficulty
-        <select name="difficulty">
-          <option>beginner</option>
-          <option selected>intermediate</option>
-          <option>advanced</option>
-        </select>
-      </label>
-      <label>Count<input type="number" name="count" min="1" max="10" value="5" /></label>
-      <button class="button" type="submit">Generate MCQs</button>
-    </form>
-    <pre id="aiOutput" class="ai-output"></pre>
-  </article>
+  <section class="panel-grid two-up dashboard-sections reveal-in delay-4">
+    <article class="card panel-card">
+      <h2>AI Questions</h2>
+      <form id="questionForm" class="stack" method="post" action="/practice/generate" onsubmit="return false;">
+        <label>Topic<input type="text" name="topic" required /></label>
+        <label>Difficulty
+          <select name="difficulty">
+            <option>beginner</option>
+            <option selected>intermediate</option>
+            <option>advanced</option>
+          </select>
+        </label>
+        <label>Count<input type="number" name="count" min="1" max="10" value="5" /></label>
+        <button class="button" type="submit">Generate MCQs</button>
+      </form>
+      <pre id="aiOutput" class="ai-output"></pre>
+    </article>
+
+    <article class="card panel-card">
+      <h2>Revision Items</h2>
+      <div id="revisionList" class="list scroll-panel"></div>
+    </article>
+  </section>
 </section>
 {% endblock %}
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="/static/js/dashboard.js"></script>
+<script src="/static/js/dashboard.js?v=1.0.0"></script>
 {% endblock %}
